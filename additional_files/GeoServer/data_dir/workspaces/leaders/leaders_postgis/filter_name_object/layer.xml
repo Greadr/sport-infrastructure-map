@@ -1,0 +1,14 @@
+<layer>
+  <name>filter_name_object</name>
+  <id>LayerInfoImpl--54d8dc6a:17c842b2d42:-184f</id>
+  <type>VECTOR</type>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--54d8dc6a:17c842b2d42:-1850</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-15 20:47:03.791 UTC</dateCreated>
+  <dateModified>2021-10-20 08:47:46.629 UTC</dateModified>
+</layer>

@@ -1,0 +1,14 @@
+<layer>
+  <name>info_sports</name>
+  <id>LayerInfoImpl-258998a4:17cadea6bf2:4af8</id>
+  <type>VECTOR</type>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-258998a4:17cadea6bf2:4af7</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-23 16:12:15.779 UTC</dateCreated>
+  <dateModified>2021-10-23 16:19:26.347 UTC</dateModified>
+</layer>

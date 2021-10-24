@@ -1,0 +1,251 @@
+@import "./helpers/variables";
+
+.Filter-select {
+  max-width: 100%;
+  width: 100%;
+}
+
+.Filter-select + .Filter-select {
+  margin-top: 8px;
+}
+
+.Filter-select__wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.Filter-select__title {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 7px;
+  padding-left: 10px;
+
+  &:before {
+    content: url('../images/icons/dot.svg');
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 4px;
+    height: 4px;
+  }
+}
+
+.select__btn {
+  min-height: 36px;
+  background: #FFFDFD;
+  border: 1px solid #CECCCC;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px 0;
+  max-width: 335px;
+  width: 100%;
+  margin-right: 5px;
+}
+
+.select__btn-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8;
+  cursor: pointer;
+
+  &.isFocused {
+    transform: rotate(-180deg) translateY(50%);
+
+    path {
+      stroke: $main;
+    }
+  }
+}
+
+.filter-reset-btn {
+  cursor: pointer;
+
+  &.active {
+    path {
+      fill: #110932;
+    }
+  }
+}
+
+.select-input {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  padding: 5px 15px 5px 5px;
+}
+
+.select-label {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-top: auto;
+  width: 100%;
+}
+
+.select__chosen {
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: .2s;
+  &:hover {
+    color: $main;
+  }
+  &.selected {
+    color: $main;
+  }
+}
+
+.Tag {
+  font-size: 12px;
+  font-weight: 700;
+  background: $main;
+  border-radius: 10px;
+  height: 18px;
+  padding: 1px 8px;
+  max-width: 115px;
+  width: fit-content;
+  color: #fff;
+  min-width: 90px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-right: 5px;
+  margin-bottom: 3px;
+}
+
+.tag-title {
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+.tag-delete {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  background-color: rgba(236, 14, 67, 0.7);
+  padding-left: 7px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 65px;
+  overflow-y: scroll;
+}
+
+.Filter-select__dropdown {
+  background: #FFFDFD;
+  border: 1px solid #CECCCC;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+  max-width: 335px;
+}
+
+.select-dropdown__list {
+  max-height: 135px;
+  overflow-y: scroll;
+  min-height: 100px;
+}
+
+.filter-select__item {
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px;
+  transition: .2s;
+  padding-left: 15px;
+
+  &:hover {
+    background-color: rgba(198, 191, 193, 0.29);
+    color: $main;
+    .form-checkbox-custom .form-label:after {
+      border-color: $main;
+    }
+  }
+
+  &.selected {
+    background-color: $main;
+    color: #ffffff;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.isFocused {
+  border-color: $main;
+}
+
+.FilterItem {
+  font-weight: 400;
+  font-size: 12px;
+  //border: 1px solid #B2AAAA;
+  border-radius: 10px;
+  padding: 5px 7px;
+  cursor: pointer;
+  width: fit-content;
+  min-width: 165px;  
+  max-width: 210px;
+  margin-right: 3px;
+  margin-bottom: 6px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  line-height: 1.4;
+
+  &.isActive {
+    color: #FFFFFF;
+    background-color: $main;
+    border-color: $main;
+    font-weight: 700;
+  }
+}
+
+.layers {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 9px 9px 3px 9px;
+}
+
+.LayersFilters {
+  margin-bottom: 10px;
+  margin-top: 17px;
+}
+
+.layers {
+  background: #FFFDFD;
+  border: 1px solid #CECCCC;
+  border-radius: 10px;
+}
+
+.filter-error {
+  font-size: 14px;
+  color: #645C5C;
+  display: inline-block;
+  margin: auto;
+}
+
+.select-dropdown__list--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}

@@ -1,0 +1,123 @@
+<featureType>
+  <id>FeatureTypeInfoImpl-592be6bb:17c9f67ff25:55ba</id>
+  <name>thresholds_heatmap_square</name>
+  <nativeName>thresholds_heatmap_square</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-24d5dd94:17c74592a0a:-7ffe</id>
+  </namespace>
+  <title>thresholds_heatmap_square</title>
+  <keywords>
+    <string>features</string>
+    <string>thresholds_heatmap_square</string>
+  </keywords>
+  <srs>EPSG:404000</srs>
+  <nativeBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>thresholds_heatmap_square</name>
+        <sql>with zones as (&#xd;
+	select distinct on (sz.id) sz.id, sz.square &#xd;
+	from  &quot;source&quot;.sport_zones sz&#xd;
+	left join &quot;source&quot;.sport_objects so on so.id = sz.object_id &#xd;
+	left join &quot;source&quot;.sport_zones_to_kinds szk on sz.id = szk.sport_zone_id &#xd;
+	where (&#xd;
+			NULLIF(&apos;%obj_name%&apos;, &apos;&apos;) is null or&#xd;
+			so.name = any(string_to_array(&apos;%obj_name%&apos;, &apos;;&apos;))&#xd;
+		)&#xd;
+		and&#xd;
+		(&#xd;
+			NULLIF(&apos;%org_id%&apos;, &apos;&apos;) is null or&#xd;
+			so.org_id = any(string_to_array(&apos;%org_id%&apos;, &apos;;&apos;)::int[])&#xd;
+		)&#xd;
+		and&#xd;
+		(&#xd;
+			NULLIF(&apos;%sz_name%&apos;, &apos;&apos;) is null or&#xd;
+			sz.name = any(string_to_array(&apos;%sz_name%&apos;, &apos;;&apos;))&#xd;
+		)	&#xd;
+		and&#xd;
+		(&#xd;
+			NULLIF(&apos;%sz_type%&apos;, &apos;&apos;) is null or&#xd;
+			sz.zone_type = any(string_to_array(&apos;%sz_type%&apos;, &apos;;&apos;)::int[])&#xd;
+		)	&#xd;
+		and&#xd;
+		(&#xd;
+			NULLIF(&apos;%buf%&apos;, &apos;&apos;) is null or&#xd;
+			so.buffer = any(string_to_array(&apos;%buf%&apos;, &apos;;&apos;)::int[])&#xd;
+		)&#xd;
+		and&#xd;
+		(&#xd;
+			NULLIF(&apos;%s_kind%&apos;, &apos;&apos;) is null or&#xd;
+			szk.sport_kind_id = any(string_to_array(&apos;%s_kind%&apos;, &apos;;&apos;)::int[])&#xd;
+		)&#xd;
+)&#xd;
+, zones_to_hex as (&#xd;
+	select unnest(h.hex_ids) hex_id, square&#xd;
+	from zones z, geo.zones_arrays_hexagons h &#xd;
+	where z.id=h.id&#xd;
+)&#xd;
+, hex_sum as (&#xd;
+	select hex_id, sum(square) square&#xd;
+	from zones_to_hex&#xd;
+	group by hex_id&#xd;
+)&#xd;
+select ar[1] class_empty, ar[2] class_1, ar[3] class_2, ar[4] class_3, ar[5] class_4, ar[6] class_5&#xd;
+from (&#xd;
+	select array_prepend(.9, geo.CDB_JenksBins(array_agg(h.square), 5, 0)::numeric[]) ar&#xd;
+	from hex_sum h&#xd;
+) a
+</sql>
+        <escapeSql>false</escapeSql>
+        <parameter>
+          <name>buf</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>obj_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>org_id</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>s_kind</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_type</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-24d5dd94:17c74592a0a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

@@ -1,0 +1,57 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--54d8dc6a:17c842b2d42:-1835</id>
+  <name>filter_type_zone</name>
+  <nativeName>filter_type_zone</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-24d5dd94:17c74592a0a:-7ffe</id>
+  </namespace>
+  <title>filter_type_zone</title>
+  <keywords>
+    <string>features</string>
+    <string>filter_type_zone</string>
+  </keywords>
+  <srs>EPSG:404000</srs>
+  <nativeBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>filter_type_zone</name>
+        <sql>select distinct name, id&#xd;
+from source.zone_types&#xd;
+where name ilike &apos;%%name%%&apos;&#xd;
+order by name
+</sql>
+        <escapeSql>false</escapeSql>
+        <parameter>
+          <name>name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-24d5dd94:17c74592a0a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

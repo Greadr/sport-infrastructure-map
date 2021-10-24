@@ -1,0 +1,16 @@
+<layer>
+  <name>test_view</name>
+  <id>LayerInfoImpl-592be6bb:17c9e6bfe6a:1101</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-592be6bb:17c9e6bfe6a:1100</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-20 15:59:58.714 UTC</dateCreated>
+</layer>

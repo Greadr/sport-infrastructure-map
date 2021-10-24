@@ -1,0 +1,45 @@
+<GeoServerTileLayer>
+  <id>LayerInfoImpl--349b2b9b:17c7ddbff8d:5d49</id>
+  <enabled>true</enabled>
+  <inMemoryCached>true</inMemoryCached>
+  <name>leaders:objects_centroids</name>
+  <mimeFormats>
+    <string>image/jpeg</string>
+    <string>application/vnd.mapbox-vector-tile</string>
+    <string>image/png</string>
+  </mimeFormats>
+  <gridSubsets>
+    <gridSubset>
+      <gridSetName>EPSG:900913</gridSetName>
+    </gridSubset>
+    <gridSubset>
+      <gridSetName>EPSG:4326</gridSetName>
+      <extent>
+        <coords>
+          <double>37.14206314086914</double>
+          <double>55.403480529785156</double>
+          <double>37.98309326171875</double>
+          <double>56.019561767578125</double>
+        </coords>
+      </extent>
+    </gridSubset>
+  </gridSubsets>
+  <metaWidthHeight>
+    <int>4</int>
+    <int>4</int>
+  </metaWidthHeight>
+  <expireCache>0</expireCache>
+  <expireClients>0</expireClients>
+  <parameterFilters>
+    <styleParameterFilter>
+      <key>STYLES</key>
+      <defaultValue></defaultValue>
+      <availableStyles class="sorted-set">
+        <string>leaders:objects_marker</string>
+        <string>leaders:objescts_test</string>
+      </availableStyles>
+      <defaultStyle>generic</defaultStyle>
+    </styleParameterFilter>
+  </parameterFilters>
+  <gutter>0</gutter>
+</GeoServerTileLayer>

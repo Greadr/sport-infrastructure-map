@@ -1,0 +1,14 @@
+<layer>
+  <name>thresholds_heatmap_provision</name>
+  <id>LayerInfoImpl-431c0be1:17ca7356e4d:-10a0</id>
+  <type>VECTOR</type>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-431c0be1:17ca7356e4d:-10a1</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-22 11:25:57.38 UTC</dateCreated>
+  <dateModified>2021-10-23 13:21:05.580 UTC</dateModified>
+</layer>

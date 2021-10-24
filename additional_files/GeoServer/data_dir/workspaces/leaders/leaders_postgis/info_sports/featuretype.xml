@@ -1,0 +1,169 @@
+<featureType>
+  <id>FeatureTypeInfoImpl-258998a4:17cadea6bf2:4af7</id>
+  <name>info_sports</name>
+  <nativeName>info_sports</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-24d5dd94:17c74592a0a:-7ffe</id>
+  </namespace>
+  <title>info_sports</title>
+  <keywords>
+    <string>features</string>
+    <string>info_sports</string>
+  </keywords>
+  <srs>EPSG:404000</srs>
+  <nativeBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>info_sports</name>
+        <sql>with zones as (&#xd;
+	select distinct on (sz.id) sz.id, sz.square &#xd;
+	from  &quot;source&quot;.sport_zones sz&#xd;
+	left join &quot;source&quot;.sport_objects so on so.id = sz.object_id &#xd;
+	left join &quot;source&quot;.sport_zones_to_kinds szk on sz.id = szk.sport_zone_id &#xd;
+	where (&#xd;
+		NULLIF(&apos;%obj_name%&apos;, &apos;&apos;) is null or&#xd;
+		so.name = any(string_to_array(&apos;%obj_name%&apos;, &apos;;&apos;))&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%org_id%&apos;, &apos;&apos;) is null or&#xd;
+		so.org_id = any(string_to_array(&apos;%org_id%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%sz_name%&apos;, &apos;&apos;) is null or&#xd;
+		sz.name = any(string_to_array(&apos;%sz_name%&apos;, &apos;;&apos;))&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%sz_type%&apos;, &apos;&apos;) is null or&#xd;
+		sz.zone_type = any(string_to_array(&apos;%sz_type%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%s_kind%&apos;, &apos;&apos;) is null or&#xd;
+		szk.sport_kind_id = any(string_to_array(&apos;%s_kind%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%buf%&apos;, &apos;&apos;) is null or&#xd;
+		so.buffer = any(string_to_array(&apos;%buf%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+)&#xd;
+, houses as (&#xd;
+select u.*&#xd;
+from geo.living_unoms u &#xd;
+where st_intersects(u.geom, st_geomfromgeojson(&apos;%geojson%&apos;))&#xd;
+)&#xd;
+, all_zones_for_unoms as (&#xd;
+	select unnest(uz.ids) id, h.unom&#xd;
+	from houses h, geo.unoms_arrays_zones uz&#xd;
+	where h.unom=uz.unom&#xd;
+)&#xd;
+, zones_filter as (&#xd;
+	select az.id, az.unom, z.square&#xd;
+	from all_zones_for_unoms az, zones z&#xd;
+	where az.id=z.id&#xd;
+)&#xd;
+, zone_types as (&#xd;
+	select zf.*, zt.&quot;name&quot; zone_type &#xd;
+	from zones_filter zf&#xd;
+	join &quot;source&quot;.sport_zones sz on sz.id = zf.id &#xd;
+	join &quot;source&quot;.zone_types zt on zt.id = sz.zone_type &#xd;
+)&#xd;
+, zone_to_sport_kind as (&#xd;
+	select distinct on (zf.id)zf.id, sk.&quot;name&quot;&#xd;
+	from zones_filter zf&#xd;
+	join &quot;source&quot;.sport_zones sz on sz.id = zf.id &#xd;
+	join &quot;source&quot;.sport_zones_to_kinds zk on zk.sport_zone_id = sz.id &#xd;
+	join &quot;source&quot;.sport_kinds sk on zk.sport_kind_id = sk.id&#xd;
+	where NULLIF(&apos;&apos;, &apos;&apos;) is null or&#xd;
+		zk.sport_kind_id = any(string_to_array(&apos;&apos;, &apos;;&apos;)::int[])&#xd;
+)&#xd;
+, sport_kinds_by_name as (&#xd;
+	select json_agg(json_build_object(&apos;zone_type&apos;, sport_kind,&apos;amount&apos;,amount)) sport_kinds_amount&#xd;
+	from (&#xd;
+		select &quot;name&quot; sport_kind, count(&quot;name&quot;) amount from zone_to_sport_kind&#xd;
+		group by &quot;name&quot;&#xd;
+		order by count(&quot;name&quot;) desc&#xd;
+	) ag&#xd;
+)&#xd;
+, zone_types_distinct as (&#xd;
+	select distinct on (id) id, zone_type, square&#xd;
+	from zone_types&#xd;
+)&#xd;
+, agg_by_type as (&#xd;
+	select zone_type, count(zone_type) type_count, round(sum(square)) sport_square_sum&#xd;
+	from zone_types_distinct&#xd;
+	group by zone_type&#xd;
+	order by count(zone_type) desc&#xd;
+)&#xd;
+, zone_types_names as (&#xd;
+	select json_agg(json_build_object(&apos;zone_type&apos;, zone_type,&apos;amount&apos;,type_count)) sport_zones_amount, sum (sport_square_sum) sport_square_sum&#xd;
+	from agg_by_type&#xd;
+)&#xd;
+select&#xd;
+sport_square_sum,&#xd;
+sport_zones_amount::text,&#xd;
+sport_kinds_amount::text&#xd;
+from zone_types_names, sport_kinds_by_name
+</sql>
+        <escapeSql>false</escapeSql>
+        <parameter>
+          <name>geojson</name>
+          <regexpValidator>.*</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>buf</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>obj_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>org_id</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>s_kind</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_type</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-24d5dd94:17c74592a0a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

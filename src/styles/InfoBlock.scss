@@ -1,0 +1,128 @@
+@import "helpers/variables";
+
+.InfoBlock {
+  z-index: 1000000;
+  margin: 15px;
+  background: #FFFFFF;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+  padding: 28px 25px 25px 20px;
+  max-width: 380px;
+  max-height: 650px;
+  padding-right: 0;
+  height: fit-content;
+}
+
+.HintBlock {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 13px;
+  line-height: 16px;
+  max-width: 380px;
+}
+
+.HintBlock__item+.HintBlock__item {
+  margin-top: 9px;
+}
+
+.HintBlock__text {
+  margin-bottom: 9px;
+}
+
+.InfoBlock__top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-right: 12px;
+}
+
+.InfoBlock__close {
+  border: 1px solid #C4C4C4;
+  //box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  margin-right: 10px;
+  transition: .2s;
+  svg {
+    path {
+      transition: .2s;
+      stroke: #C4C4C4;
+    }
+  }
+  &:hover {
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.25);
+    border-color: $blue;
+    svg {
+      path {
+        stroke: $blue;
+      }
+    }
+  }
+}
+
+.InfoBlock__title{
+  margin-bottom: 0;
+}
+
+.InfoBlockItem {
+  display: flex;
+  padding: 10px 0;
+}
+
+.InfoBlockItem+.InfoBlockItem {
+  border-top: 1px solid #C4C4C4;
+}
+
+.InfoBlockItem__title{
+  max-width: 123px;
+  width: 100%;
+  margin-right: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  padding-left: 13px;
+  &:before{
+    content: "";
+    width: 3px;
+    height: 3px;
+    background-color: $blue;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+}
+
+.InfoBlockItem__items{
+  font-size: 13px;
+}
+
+.InfoBlockItem__item+.InfoBlockItem__item {
+  margin-top: 5px;
+}
+
+.InfoBlock__inner {
+  max-height: 475px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}
+
+.InfoBlock__subtitle {
+  font-size: 11px;
+  padding-left: 36px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  color: gray;
+  h3 {    
+    font-weight: lighter;
+  }
+}
+
+.InfoBlockItem__empty {  
+  text-align: center;
+  font-weight: 700;
+}

@@ -1,0 +1,61 @@
+<featureType>
+  <id>FeatureTypeInfoImpl-46b21f1:17bbeb2002d:-7ff2</id>
+  <name>moscow_search</name>
+  <nativeName>moscow_search</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl--53be75d1:172c7516da4:-7ffe</id>
+  </namespace>
+  <title>moscow_search</title>
+  <keywords>
+    <string>features</string>
+    <string>moscow_search</string>
+  </keywords>
+  <srs>EPSG:404000</srs>
+  <nativeBoundingBox>
+    <minx>36.8031286770001</minx>
+    <maxx>37.9674656820001</maxx>
+    <miny>55.1422255530001</miny>
+    <maxy>56.0212478650001</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>36.8031286770001</minx>
+    <maxx>37.9674656820001</maxx>
+    <miny>55.1422255530001</miny>
+    <maxy>56.0212478650001</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>moscow_search</name>
+        <sql>select * from moscow_progress&#xd;
+where name ~* (&apos;.*(?=.*\y&apos; || replace(replace(&apos;%name%&apos;, &apos;ё&apos;,&apos;е&apos;), &apos; &apos;, &apos;)(?=.*\y&apos;) || &apos;).*&apos;)
+</sql>
+        <escapeSql>false</escapeSql>
+        <keyColumn>id</keyColumn>
+        <geometry>
+          <name>geom</name>
+          <type>Geometry</type>
+          <srid>-1</srid>
+        </geometry>
+        <parameter>
+          <name>name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl--53be75d1:172c7516da4:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

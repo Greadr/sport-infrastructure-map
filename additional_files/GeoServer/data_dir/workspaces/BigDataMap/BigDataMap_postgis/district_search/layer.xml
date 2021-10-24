@@ -1,0 +1,17 @@
+<layer>
+  <name>district_search</name>
+  <id>LayerInfoImpl--d9e3bd3:17b95a67f6e:-7f91</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-37b18cc6:14d5d036d48:-8000</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--d9e3bd3:17b95a67f6e:-7f92</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-08-31 08:29:21.727 UTC</dateCreated>
+  <dateModified>2021-09-07 07:35:49.171 UTC</dateModified>
+</layer>

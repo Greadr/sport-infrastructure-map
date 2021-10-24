@@ -1,0 +1,17 @@
+<layer>
+  <name>io_search</name>
+  <id>LayerInfoImpl--d9e3bd3:17b95a67f6e:-7f47</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--d9e3bd3:17b95a67f6e:-7f48</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-08-31 13:57:54.322 UTC</dateCreated>
+  <dateModified>2021-09-07 07:37:44.471 UTC</dateModified>
+</layer>

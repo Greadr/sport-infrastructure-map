@@ -1,0 +1,16 @@
+<layer>
+  <name>deg_moscow</name>
+  <id>LayerInfoImpl-4050e1f0:17bb7417d0c:-7fa2</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-4050e1f0:17bb7417d0c:-7fa3</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-09-06 11:07:10.492 UTC</dateCreated>
+</layer>

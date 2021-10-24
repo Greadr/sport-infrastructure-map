@@ -1,0 +1,14 @@
+<layer>
+  <name>filter_kind_sport</name>
+  <id>LayerInfoImpl--54d8dc6a:17c842b2d42:-1832</id>
+  <type>VECTOR</type>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--54d8dc6a:17c842b2d42:-1833</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-16 07:19:39.226 UTC</dateCreated>
+  <dateModified>2021-10-20 08:49:00.182 UTC</dateModified>
+</layer>

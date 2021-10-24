@@ -1,0 +1,98 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--4a6e6a6f:17c92556085:-66a6</id>
+  <name>info_objects</name>
+  <nativeName>info_objects</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-24d5dd94:17c74592a0a:-7ffe</id>
+  </namespace>
+  <title>info_objects</title>
+  <keywords>
+    <string>features</string>
+    <string>info_objects</string>
+  </keywords>
+  <srs>EPSG:404000</srs>
+  <nativeBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>info_objects</name>
+        <sql>with object_n_o as (&#xd;
+	select so.id, so.name obj_name, o.name organization&#xd;
+	from &quot;source&quot;.sport_objects so&#xd;
+	join &quot;source&quot;.organizations o on org_id=o.id &#xd;
+	where so.id = nullif(&apos;%id%&apos;, &apos;&apos;)::int&#xd;
+)&#xd;
+, s_zones as (&#xd;
+	select json_agg(s_zones) s_zones&#xd;
+	from (	&#xd;
+		select name s_zones from &quot;source&quot;.sport_zones&#xd;
+		where object_id = nullif(&apos;%id%&apos;, &apos;&apos;)::int&#xd;
+		order by name&#xd;
+	) a&#xd;
+)&#xd;
+, z_types as (&#xd;
+	select json_agg(z_types) z_types&#xd;
+	from (&#xd;
+		select distinct zt.name z_types from &quot;source&quot;.zone_types zt&#xd;
+		join &quot;source&quot;.sport_zones sz on sz.zone_type = zt.id&#xd;
+		where object_id = nullif(&apos;%id%&apos;, &apos;&apos;)::int&#xd;
+		order by zt.name	&#xd;
+	) a&#xd;
+)&#xd;
+, s_kinds as (&#xd;
+	select json_agg(s_kinds) s_kinds&#xd;
+	from (&#xd;
+		select distinct sk.name s_kinds from &quot;source&quot;.sport_zones sz&#xd;
+		join &quot;source&quot;.sport_zones_to_kinds zk on sz.id = zk.sport_zone_id &#xd;
+		join &quot;source&quot;.sport_kinds sk on zk.sport_kind_id = sk.id &#xd;
+		where object_id = nullif(&apos;%id%&apos;, &apos;&apos;)::int&#xd;
+		order by sk.name&#xd;
+	) a&#xd;
+)&#xd;
+, accessibility as (&#xd;
+	select CASE &#xd;
+			WHEN accessib=1  THEN &apos;Городская (5000 м)&apos;&#xd;
+			WHEN accessib=2  THEN &apos;Окружная (3000 м)&apos;&#xd;
+			WHEN accessib=3  THEN &apos;Районная (1000 м)&apos;&#xd;
+			WHEN accessib=4  THEN &apos;Шаговая (500 м)&apos;&#xd;
+		end  accessibility&#xd;
+	from &quot;source&quot;.sport_objects&#xd;
+	where id = nullif(&apos;%id%&apos;, &apos;&apos;)::int&#xd;
+)&#xd;
+select obj_name, organization, z.s_zones::text, t.z_types::text, k.s_kinds::text, a.accessibility &#xd;
+from object_n_o o, s_zones z, z_types t, s_kinds k, accessibility a
+</sql>
+        <escapeSql>false</escapeSql>
+        <parameter>
+          <name>id</name>
+          <regexpValidator>^[\w\d\s]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-24d5dd94:17c74592a0a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

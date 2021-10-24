@@ -1,0 +1,14 @@
+<layer>
+  <name>info_objects</name>
+  <id>LayerInfoImpl--4a6e6a6f:17c92556085:-66a5</id>
+  <type>VECTOR</type>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--4a6e6a6f:17c92556085:-66a6</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-18 18:09:34.12 UTC</dateCreated>
+  <dateModified>2021-10-18 18:37:01.739 UTC</dateModified>
+</layer>

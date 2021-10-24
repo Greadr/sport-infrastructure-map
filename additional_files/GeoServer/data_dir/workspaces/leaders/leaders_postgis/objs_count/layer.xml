@@ -1,0 +1,22 @@
+<layer>
+  <name>objs_count</name>
+  <id>LayerInfoImpl--349b2b9b:17c7ddbff8d:3105</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl-4cbb1e62:17c788d0e0e:5ea7</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--349b2b9b:17c7ddbff8d:3104</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-14 08:29:47.601 UTC</dateCreated>
+  <dateModified>2021-10-14 09:52:12.528 UTC</dateModified>
+</layer>

@@ -1,0 +1,10 @@
+<userGroupService>
+  <id>6d1a9a75:1730b5009e4:-7fff</id>
+  <name>cert-ugs</name>
+  <className>org.geoserver.security.xml.XMLUserGroupService</className>
+  <fileName>users.xml</fileName>
+  <checkInterval>0</checkInterval>
+  <validating>false</validating>
+  <passwordEncoderName>emptyPasswordEncoder</passwordEncoderName>
+  <passwordPolicyName>default</passwordPolicyName>
+</userGroupService>

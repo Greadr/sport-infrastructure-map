@@ -1,0 +1,17 @@
+<layer>
+  <name>filter_apply_buffers</name>
+  <id>LayerInfoImpl-431c0be1:17cad3f178d:-5b44</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-37b18cc6:14d5d036d48:-8000</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-431c0be1:17cad3f178d:-5b45</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-23 13:05:12.578 UTC</dateCreated>
+  <dateModified>2021-10-23 16:21:41.991 UTC</dateModified>
+</layer>

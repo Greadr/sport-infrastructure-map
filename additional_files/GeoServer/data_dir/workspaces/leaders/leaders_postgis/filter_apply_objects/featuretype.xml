@@ -1,0 +1,112 @@
+<featureType>
+  <id>FeatureTypeInfoImpl--55731e9b:17c9cd2a462:3a72</id>
+  <name>filter_apply_objects</name>
+  <nativeName>filter_apply_objects</nativeName>
+  <namespace>
+    <id>NamespaceInfoImpl-24d5dd94:17c74592a0a:-7ffe</id>
+  </namespace>
+  <title>filter_apply_objects</title>
+  <keywords>
+    <string>features</string>
+    <string>filter_apply_objects</string>
+  </keywords>
+  <srs>EPSG:4326</srs>
+  <nativeBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+  </nativeBoundingBox>
+  <latLonBoundingBox>
+    <minx>-1.0</minx>
+    <maxx>0.0</maxx>
+    <miny>-1.0</miny>
+    <maxy>0.0</maxy>
+    <crs>EPSG:4326</crs>
+  </latLonBoundingBox>
+  <projectionPolicy>FORCE_DECLARED</projectionPolicy>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="JDBC_VIRTUAL_TABLE">
+      <virtualTable>
+        <name>filter_apply_objects</name>
+        <sql>select distinct on (c.id) c.id, c.geom&#xd;
+from geo.objects_centroids c&#xd;
+left join &quot;source&quot;.sport_objects so using (id)&#xd;
+left join &quot;source&quot;.sport_zones sz on sz.object_id = c.id &#xd;
+left join &quot;source&quot;.sport_zones_to_kinds szk on szk.sport_zone_id = sz.id&#xd;
+where (&#xd;
+		NULLIF(&apos;%obj_name%&apos;, &apos;&apos;) is null or&#xd;
+		so.name = any(string_to_array(&apos;%obj_name%&apos;, &apos;;&apos;))&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%org_id%&apos;, &apos;&apos;) is null or&#xd;
+		so.org_id = any(string_to_array(&apos;%org_id%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%sz_name%&apos;, &apos;&apos;) is null or&#xd;
+		sz.name = any(string_to_array(&apos;%sz_name%&apos;, &apos;;&apos;))&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%sz_type%&apos;, &apos;&apos;) is null or&#xd;
+		sz.zone_type = any(string_to_array(&apos;%sz_type%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%s_kind%&apos;, &apos;&apos;) is null or&#xd;
+		szk.sport_kind_id = any(string_to_array(&apos;%s_kind%&apos;, &apos;;&apos;)::int[])&#xd;
+	)&#xd;
+	and&#xd;
+	(&#xd;
+		NULLIF(&apos;%buf%&apos;, &apos;&apos;) is null or&#xd;
+		c.buffer = any(string_to_array(&apos;%buf%&apos;, &apos;;&apos;)::int[])&#xd;
+	)
+</sql>
+        <escapeSql>false</escapeSql>
+        <geometry>
+          <name>geom</name>
+          <type>Geometry</type>
+          <srid>-1</srid>
+        </geometry>
+        <parameter>
+          <name>buf</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>obj_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>org_id</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_name</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>s_kind</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
+          <name>sz_type</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+      </virtualTable>
+    </entry>
+  </metadata>
+  <store class="dataStore">
+    <id>DataStoreInfoImpl-24d5dd94:17c74592a0a:-7ffd</id>
+  </store>
+  <serviceConfiguration>false</serviceConfiguration>
+  <maxFeatures>0</maxFeatures>
+  <numDecimals>0</numDecimals>
+  <padWithZeros>false</padWithZeros>
+  <forcedDecimal>false</forcedDecimal>
+  <overridingServiceSRS>false</overridingServiceSRS>
+  <skipNumberMatched>false</skipNumberMatched>
+  <circularArcPresent>false</circularArcPresent>
+</featureType>

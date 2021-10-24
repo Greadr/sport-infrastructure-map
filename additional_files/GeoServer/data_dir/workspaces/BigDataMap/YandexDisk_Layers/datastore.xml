@@ -1,0 +1,23 @@
+<dataStore>
+  <id>DataStoreInfoImpl-6306574:173bde531c1:-4ed6</id>
+  <name>YandexDisk_Layers</name>
+  <type>Directory of spatial files (shapefiles)</type>
+  <enabled>true</enabled>
+  <workspace>
+    <id>WorkspaceInfoImpl--53be75d1:172c7516da4:-7fff</id>
+  </workspace>
+  <connectionParameters>
+    <entry key="charset">ISO-8859-1</entry>
+    <entry key="filetype">shapefile</entry>
+    <entry key="create spatial index">true</entry>
+    <entry key="memory mapped buffer">false</entry>
+    <entry key="timezone">Europe/Moscow</entry>
+    <entry key="enable spatial index">true</entry>
+    <entry key="namespace">wtf</entry>
+    <entry key="cache and reuse memory maps">true</entry>
+    <entry key="url">file://D:\Yandexdisk\YandexDisk\Layers - Символическая ссылка</entry>
+    <entry key="fstype">shape</entry>
+  </connectionParameters>
+  <__default>false</__default>
+  <dateCreated>2020-08-05 09:34:46.523 UTC</dateCreated>
+</dataStore>

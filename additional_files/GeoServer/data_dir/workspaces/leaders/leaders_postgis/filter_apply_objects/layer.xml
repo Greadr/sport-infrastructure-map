@@ -1,0 +1,17 @@
+<layer>
+  <name>filter_apply_objects</name>
+  <id>LayerInfoImpl--55731e9b:17c9cd2a462:3a73</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-37b18cc6:14d5d036d48:-8000</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--55731e9b:17c9cd2a462:3a72</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-20 10:35:59.435 UTC</dateCreated>
+  <dateModified>2021-10-23 13:05:27.562 UTC</dateModified>
+</layer>

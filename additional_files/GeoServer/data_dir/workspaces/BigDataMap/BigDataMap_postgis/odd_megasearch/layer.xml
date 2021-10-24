@@ -1,0 +1,17 @@
+<layer>
+  <name>odd_megasearch</name>
+  <id>LayerInfoImpl-46b21f1:17bbeb2002d:-7fc5</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-46b21f1:17bbeb2002d:-7fc6</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-09-07 13:22:52.730 UTC</dateCreated>
+  <dateModified>2021-09-15 17:21:44.220 UTC</dateModified>
+</layer>

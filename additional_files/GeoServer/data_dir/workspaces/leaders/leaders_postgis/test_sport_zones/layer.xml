@@ -1,0 +1,17 @@
+<layer>
+  <name>test_sport_zones</name>
+  <id>LayerInfoImpl--349b2b9b:17c83358170:-2802</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-4cbb1e62:17c788d0e0e:5ea7</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--349b2b9b:17c83358170:-2803</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-10-15 10:08:30.175 UTC</dateCreated>
+  <dateModified>2021-10-15 10:17:45.111 UTC</dateModified>
+</layer>

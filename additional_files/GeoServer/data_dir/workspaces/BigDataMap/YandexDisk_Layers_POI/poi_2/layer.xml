@@ -1,0 +1,21 @@
+<layer>
+  <name>poi_2</name>
+  <id>LayerInfoImpl-2b67df0e:173be28d50a:-7fe2</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fdf</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl-2b67df0e:173be28d50a:-7ffb</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-2b67df0e:173be28d50a:-7fe3</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2020-08-05 11:17:08.777 UTC</dateCreated>
+</layer>

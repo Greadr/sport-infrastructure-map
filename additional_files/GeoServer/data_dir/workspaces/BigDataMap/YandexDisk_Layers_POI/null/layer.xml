@@ -1,0 +1,17 @@
+<layer>
+  <name>null</name>
+  <id>LayerInfoImpl-2b67df0e:173be28d50a:-7fe6</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fdf</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-2b67df0e:173be28d50a:-7fe7</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2020-08-05 11:16:34.48 UTC</dateCreated>
+  <dateModified>2021-08-23 17:23:56.151 UTC</dateModified>
+</layer>
