@@ -34,7 +34,7 @@ CREATE INDEX objects_centroids_geom_idx ON geo.objects_centroids
   USING gist (geom);
 
  
--- FILTER FOR OBJECTS
+-- SQLVIEW FILTER FOR OBJECTS
 select distinct on (c.id) c.id, c.geom
 from geo.objects_centroids c
 join "source".sport_objects so using (id)
@@ -121,7 +121,7 @@ join hex_join h
 on h.id=z.object_id
 group by z.id
 
--- thresholds for heatmap square
+-- SQLVIEW thresholds for heatmap square
 with zones as (
 	select distinct on (sz.id) sz.id, sz.square 
 	from  "source".sport_zones sz
@@ -446,7 +446,7 @@ join house_join h
 on h.id=z.object_id
 group by unom
 
--- provision by custom territory
+-- SQLVIEW provision by custom territory
 with zones as (
 	select distinct on (sz.id) sz.id, sz.square 
 	from  "source".sport_zones sz
@@ -555,7 +555,7 @@ select sport_zones_provision,
 	from all_aggregate, zone_types_names
 	
 	
--- sport stats by custom territory
+-- SQLVIEW sport stats by custom territory
 with zones as (
 	select distinct on (sz.id) sz.id, sz.square 
 	from  "source".sport_zones sz
