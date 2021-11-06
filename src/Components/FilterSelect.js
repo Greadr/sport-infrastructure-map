@@ -10,7 +10,6 @@ import FilterItem from "./FilterItem";
 import Loader from "./Loader";
 import CheckBox from "./CheckBox";
 
-
 const FilterSelect = (
     {
         title = 'Фильтр',
@@ -19,11 +18,13 @@ const FilterSelect = (
         checkbox = true,
         type,
         setModel,
-        model
+        model,
+        flag,
     }
 ) => {
     const [items, setItems] = useState([])
-    const [filter, setFilter] = useState('')
+    const [allFilterItems, setAllFilterItems] = useState([])
+    const [filter, setFilter] = useState(type === 's_kind' ? 'Волейбол' : '')
     const [isLoading, setIsLoading] = useState(false)
     const [onlySelected, setOnlySelected] = useState(false)
 
@@ -33,17 +34,44 @@ const FilterSelect = (
     const MAX_SELECTED_COUNT = 5;
 
     const resetFilters = () => {
+        setFilter('')
         if (!!selectedItems.length) {
             setSelectedItems([])
         }
     }
 
     useEffect(() => {
+        if (!!allFilterItems?.length ) {
+            setModelToFilter(type)
+        }
+    }, [allFilterItems, flag])
+
+    useEffect(() => {
         if (model === null) {
             setSelectedItems([])
             setSelectedBuf([])
+            setFilter('')
         }
     }, [model])
+
+    const setModelToFilter = (type) => {
+        switch (type) {
+            case 's_kind':
+            case 'org_id':
+            case 'sz_type': {
+                const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model[type], item.id))
+                setSelectedItems(initiallySelectedSportKind)
+                return
+            }
+            case 'obj_name':
+            case 'org_name':
+            case 'sz_name': {
+                const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model[type], item.title))
+                setSelectedItems(initiallySelectedSportKind)
+                return
+            }
+        }
+    }
 
     const getModelFunc = () => {
         switch (type) {
@@ -62,19 +90,22 @@ const FilterSelect = (
             case 'org_id':
                 setModel({
                     ...model,
-                    org_id: selectedItems.map(item => item.id)
+                    org_id: selectedItems.map(item => item.id),
+                    org_name: selectedItems.map(item => item.title)
                 })
                 return
             case 'sz_type':
                 setModel({
                     ...model,
-                    sz_type: selectedItems.map(item => item.id)
+                    sz_type: selectedItems.map(item => item.id),
+                    sz_type_name: selectedItems.map(item => item.title)
                 })
                 return
             case 's_kind':
                 setModel({
                     ...model,
-                    s_kind: selectedItems.map(item => item.id)
+                    s_kind: selectedItems.map(item => item.id),
+                    s_kind_name: selectedItems.map(item => item.title)
                 })
                 return
             case 'buf':
@@ -89,6 +120,18 @@ const FilterSelect = (
     }
 
     useEffect(() => {
+        if (fetchItems) {
+            fetchItems('').then(res => {
+                const data = res?.data?.features?.map(item => ({
+                    title: item.properties.name,
+                    id: item.properties.id
+                }))
+                setAllFilterItems(data)
+            })
+        }
+    }, [])
+
+    useEffect(() => {
         getModelFunc()
     }, [selectedItems, selectedBuf])
 
@@ -98,7 +141,6 @@ const FilterSelect = (
             fetchItems(filter)
                 .then(res => {
                     const data = res?.data?.features?.map(item => ({
-                        idString: item.id,
                         title: item.properties.name,
                         id: item.properties.id
                     }))
@@ -113,18 +155,18 @@ const FilterSelect = (
     const filterRef = useRef(null)
 
     const selectedItemsIds = useMemo(() => {
-        return selectedItems.map(item => item.idString)
+        return selectedItems.map(item => item.id)
     }, [selectedItems])
 
     const onDeleteItem = useCallback((id) => {
-        setSelectedItems(selectedItems.filter(item => item.idString !== id))
+        setSelectedItems(selectedItems.filter(item => item.id !== id))
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        if (!includes(selectedItems.map(item => item.idString), item.idString) && selectedItems.length < MAX_SELECTED_COUNT) {
+        if (!includes(selectedItems.map(item => item.id), item.id) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
             setSelectedItems([...selectedItems, item])
         } else {
-            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.idString !== item.idString))
+            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.id !== item.id))
         }
     }
 
@@ -132,19 +174,18 @@ const FilterSelect = (
         setIsFocused(false)
     })
 
-
     if (onlyItems) {
         return <div className={'Filter-select'}>
             <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={'layers'}>
                 <FilterItem title={'Шаговая (радиус - 500 м)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={500}/>
+                            type={500} model={model} flag={flag}/>
                 <FilterItem title={'Окружная (радиус - 3 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={3000}/>
+                            type={3000} model={model} flag={flag}/>
                 <FilterItem title={'Районная (радиус - 1 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={1000}/>
+                            type={1000} model={model} flag={flag}/>
                 <FilterItem title={'Городская (радиус - 5 км)'} setSelectedBuf={setSelectedBuf}
-                            selectedBuf={selectedBuf} type={5000}/>
+                            selectedBuf={selectedBuf} type={5000} model={model} flag={flag}/>
             </div>
         </div>
     }
@@ -160,20 +201,22 @@ const FilterSelect = (
                          e.preventDefault()
                          setIsFocused(true)
                      }}>
-                    <ArrowIcon
-                        className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            setIsFocused(!isFocused)
-                        }}
-                    />
+                    <button className={'select__btn-arrow--btn'}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                setIsFocused(!isFocused)
+                            }}>
+                        <ArrowIcon
+                            className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
+                        />
+                    </button>
                     <div className={`tags-container scroller`}>
                         {!checkbox && selectedItems.map(item => {
                             return <Tag
                                 title={item.title}
                                 onDelete={(e) => {
                                     e.stopPropagation()
-                                    onDeleteItem(item.idString)
+                                    onDeleteItem(item.id)
                                 }}
                             />
                         })}
@@ -194,7 +237,7 @@ const FilterSelect = (
                             onChange={(e) => setFilter(e.currentTarget.value)}
                         />
                         {filter &&
-                        <CrossIcon style={{cursor: 'pointer', right: 12, flexShrink: 0}}
+                        <CrossIcon style={{cursor: 'pointer', right: 25, flexShrink: 0}}
                                    onClick={() => setFilter('')}
                         />
                         }
@@ -208,33 +251,34 @@ const FilterSelect = (
             && <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
                 <ul className={'scroller select-dropdown__list'}>
                     {isLoading ? <Loader/>
-                        : onlySelected ? items?.map(listItem => {
-                            if ((includes(selectedItemsIds, listItem.idString))) {
+                        : onlySelected ? allFilterItems?.map(listItem => {
+                            if ((includes(selectedItemsIds, listItem.id))) {
                                 return <li
-                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
+                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                         ? 'selected' : ''}`}
-                                    key={listItem.idString}
+                                    key={listItem.id}
                                     onClick={() => {
                                         onSelectItem(listItem)
                                     }}
                                 >
-                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.idString)}/>}
+                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
                                     {listItem.title}
                                 </li>
                             }
                         }) : !!items?.length ? items.map(listItem => {
                             return <li
-                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
+                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                     ? 'selected' : ''}`}
-                                key={listItem.idString}
+                                key={listItem.id}
                                 onClick={() => {
                                     onSelectItem(listItem)
                                 }}
                             >
                                 {checkbox
                                 && <CheckBox
-                                    checked={includes(selectedItemsIds, listItem.idString)}
-                                    onChange={() => {
+                                    checked={includes(selectedItemsIds, listItem.id)}
+                                    onChange={(e) => {
+                                        e.stopPropagation()
                                         onSelectItem(listItem)
                                     }}
                                 />}

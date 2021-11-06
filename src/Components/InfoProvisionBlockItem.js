@@ -1,52 +1,52 @@
 import getNoun from '../Helpers/stringHelper'
 
-const InfoProvisionBlockItem = ({ count, types, square, kinds, population, sumSquare }) => {
-    const hasData = count && types && square && kinds && population && sumSquare;
+const InfoProvisionBlockItem = ({ zones, zonesProv, types, kinds, kindsProv, population, square, squareProv, objects }) => {
+    const hasData = zones || zonesProv || types || kinds || kindsProv || population || square || squareProv || objects;
     return (
         <>        
         {!hasData && <div className='InfoBlockItem__empty'>Данные отсутствуют</div>}
         {hasData && <>
-            <div className='InfoBlockItem'>
-                <div className={'InfoBlockItem__title'}>Количество спортивных зон:</div>
-                <div className={'InfoBlockItem__items'}>
-                    <ul>
-                        <li className={'InfoBlockItem__item'}>{count.toLocaleString()} {getNoun(Number(count), 'зона', 'зоны', 'зон')} на 100 000 человек</li>
-                    </ul>
-                </div>
-            </div>
-            <div className='InfoBlockItem'>
-                <div className={'InfoBlockItem__title'}>Площадь спортивных зон:</div>
-                <div className={'InfoBlockItem__items'}>
-                    <ul>
-                        <li className={'InfoBlockItem__item'}>{square.toLocaleString()} кв. м на 100 000 человек</li>
-                    </ul>
-                </div>
-            </div>
-            <div className='InfoBlockItem'>
-                <div className={'InfoBlockItem__title'}>Видов спортивных услуг:</div>
-                <div className={'InfoBlockItem__items'}>
-                    <ul>
-                        <li className={'InfoBlockItem__item'}>{kinds.toLocaleString()} {getNoun(Number(kinds), 'услуга', 'услуги', 'услуг')} на 100 000 человек</li>
-                    </ul>
-                </div>
-            </div>
-            <div className='InfoBlockItem'>
+            {population && <div className='InfoBlockItem'>
                 <div className={'InfoBlockItem__title'}>Население:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{population.toLocaleString()} {getNoun(Number(kinds), 'человек', 'человека', 'человек')}</li>
+                        <li className={'InfoBlockItem__item'}>{population.toLocaleString()} {getNoun(Number(population), 'человек', 'человека', 'человек')}</li>
                     </ul>
                 </div>
             </div>
-            <div className='InfoBlockItem'>
-                <div className={'InfoBlockItem__title'}>Суммарная площадь спортивных зон:</div>
+            }
+             {zones && zonesProv && <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Количество спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{sumSquare.toLocaleString()}  кв. м</li>
+                        <li className={'InfoBlockItem__item'}>{zones.toLocaleString()}  {getNoun(Number(zones), 'зона', 'зоны', 'зон')}</li>
+                        <li className={'InfoBlockItem__subitem'}>({zonesProv.toLocaleString()} {getNoun(Number(zonesProv), 'зона', 'зоны', 'зон')} на 100 000 человек)</li>
                     </ul>
                 </div>
             </div>
-            <div className='InfoBlockItem'>
+            }
+            {square && squareProv && <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Площадь спортивных зон:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        <li className={'InfoBlockItem__item'}>{square.toLocaleString()}  кв. м</li>
+                        <li className={'InfoBlockItem__subitem'}>({squareProv.toLocaleString()} кв. м на 100 000 человек)</li>
+                    </ul>
+                </div>
+            </div>
+            }
+            {!!kinds && kindsProv && <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Видов спортивных услуг:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        <li className={'InfoBlockItem__item'}>{kinds.toLocaleString()} {getNoun(Number(kinds), 'услуга', 'услуги', 'услуг')}</li>
+                        <li className={'InfoBlockItem__subitem'}>({kindsProv.toLocaleString()} {getNoun(Number(kindsProv), 'услуга', 'услуги', 'услуг')} на 100 000 человек)</li>
+                    </ul>
+                </div>
+            </div>
+            }
+            {kinds === 0 && <div className='InfoBlockItem__empty'>Спортивная инфраструктура отсутствует</div>}
+            {types && <div className='InfoBlockItem'>
                 <div className={'InfoBlockItem__title'}>Типы спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
@@ -54,6 +54,16 @@ const InfoProvisionBlockItem = ({ count, types, square, kinds, population, sumSq
                     </ul>
                 </div>
             </div>
+            }
+            {objects && <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Спортивные объекты:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        {objects.map(object => <li className={'InfoBlockItem__item'}>{object}</li>) }
+                    </ul>
+                </div>
+            </div>
+            }
         </> }
     </>);
 }

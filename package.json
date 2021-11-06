@@ -8,17 +8,19 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.23.0",
+    "js-cookie": "^2.2.1",
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.17.21",
     "node-sass": "4.14.1",
     "react": "^17.0.2",
-    "react-tabs": "^3.2.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "react-tabs": "^3.2.2",
     "sass-loader": "^11.1.1",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "wicket": "^1.3.8"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,5 +38,9 @@
     ">0.2%",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "file-saver": "^2.0.5",
+    "xlsx": "^0.17.3"
+  }
 }

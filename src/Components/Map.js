@@ -5,10 +5,13 @@ import '../Leaflet.markercluster/src/index';
 import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'
 import svg_blue from '../images/icons/map-marker_blue.svg'
+import loader from '../images/icons/loader.gif'
 import {infoTypes} from './InfoBlock'
 
 import {mapAPI} from "../API/methods";
 
+const geoServerUrl = 'https://asa.sports.keenetic.pro/geoserver';
+const savedLayersName = 'saved_layers'
 const objIcon = new L.Icon({
     iconUrl: svg_red,
     iconSize: [24, 35],
@@ -48,14 +51,15 @@ class Livemap extends React.Component {
 
         this.map.getPane('markerPane').style.zIndex = 400;
 
+        const attributionStr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
         L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: attributionStr,
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'basePane',
         }).addTo(this.map);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: attributionStr,
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'overlayPane',
@@ -69,24 +73,14 @@ class Livemap extends React.Component {
             spiderfyOnMaxZoom: false,
         }).addTo(this.map);
 
-        mapAPI.getLayerJSON('objects_centroids').then(res => {
-            for (var i = 0; i < res.data.features.length; i++) {
-                var a = res.data.features[i];
-                var id = a.properties.id;
-                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
-                    .addTo(this.markers);
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        LoadMarkers(this.markers, FilterModelToParams(this.props.model));
 
         this.markers.on('click', (e) => {
             RemoveSelected(this.map);
 
             e.layer.setIcon(selectedIcon);
 
-            L?.tileLayer.wms('http://localhost:8090/geoserver/leaders/wms', {
+            L?.tileLayer.wms(`${geoServerUrl}/leaders/wms`, {
                 layers: 'leaders:object_buffer',
                 styles: 'leaders:buffer_selected',
                 format: 'image/png',
@@ -112,98 +106,11 @@ class Livemap extends React.Component {
         this.map.on('click', this.onMapClick);
 
         // добавление контрола переключения слоев
-        Promise.resolve(AddLayersWithControl(this.map, this.markers))
+        Promise.resolve(AddLayersWithControl(this.map, this.markers, FilterModelToParams(this.props.model)))
             .finally(() => this.props.setIsLoading(false));
         
         // добавление контрола geoman
-        this.map.pm.setLang('ru');
-        this.map.pm.addControls({
-            position: 'topright',
-            drawCircleMarker: false,
-            drawMarker: false,
-            drawPolyline: false,
-            optionsControls: false,
-            rotateMode: false,
-            cutPolygon: false
-        });
-
-        const controlItems = [
-            'Rectangle',
-            'Polygon',
-            'Circle',
-            'Edit',
-            'Removal',
-            'Drag',
-        ]
-
-        controlItems.forEach((item) => this.map.pm.Toolbar.changeActionsOfControl(item, []));
-
-        var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
-        var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
-        var serviceTab = document.querySelector('div.services-control');
-        if (drawControl && editControl && serviceTab) {
-            serviceTab.appendChild(drawControl);
-            serviceTab.appendChild(editControl);
-            document.querySelectorAll('.button-container').forEach((btn) => {
-                let p = document.createElement("p");
-                let innerAnchor = btn.querySelector('a.leaflet-buttons-control-button');
-                p.innerText = innerAnchor.querySelector('div').title;
-                innerAnchor.after(p);
-            })
-        };
-
-        this.map.on("pm:create", () => {
-            // disable buttons
-            document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
-            document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
-        });
-
-        this.map.on("pm:remove", () => {
-            if (this.map.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
-                //enable buttons
-                document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
-                document.querySelectorAll('.leaflet-pm-draw a')
-                    .forEach(a => a.classList.remove('leaflet-disabled'));
-            }
-            ;
-        });
-
-        document.getElementById('layerBtn')?.addEventListener('click', () => {
-            this.props.setIsLoading(true);
-
-            var drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
-            var shape = drawingLayers.pm.getShape() === 'Circle' 
-                ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
-                : drawingLayers;
-            
-            const hasHeatmapSports = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
-            const hasHeatmapProvision = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0;
-
-            var type = hasHeatmapSports
-            ? 'info_sports'
-            : hasHeatmapProvision
-                ? 'info_provision'
-                : '';
-
-            var infoType = hasHeatmapSports
-            ? infoTypes.sports
-            : hasHeatmapProvision
-                ? infoTypes.provision
-                : infoTypes.default;
-
-            mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
-                .then(res => {
-                    this.props.setData({
-                        type: infoType,
-                        items: res.data.features.map(item => item.properties)
-                    });
-
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-                .finally(() =>  this.props.setIsLoading(false))
-        });
+        AddGeoManControl(this);
     }
 
     componentWillUnmount() {
@@ -211,9 +118,7 @@ class Livemap extends React.Component {
         this.map = null;
     }
 
-    onMapClick = () => {
-        // this.props.setData([])
-    }
+    onMapClick = () => { }
 
     render() {
         return (
@@ -222,9 +127,233 @@ class Livemap extends React.Component {
     }
 }
 
+const AddGeoManControl = (mapComponent) => {
+    mapComponent.map.pm.setLang('ru');
+    mapComponent.map.pm.addControls({
+        position: 'topright',
+        drawCircleMarker: false,
+        drawMarker: false,
+        drawPolyline: false,
+        optionsControls: false,
+        rotateMode: false,
+        cutPolygon: false
+    });
+
+    const controlItems = [
+        'Rectangle',
+        'Polygon',
+        'Circle',
+        'Edit',
+        'Removal',
+        'Drag',
+    ]
+
+    controlItems.forEach((item) => mapComponent.map.pm.Toolbar.changeActionsOfControl(item, []));
+
+    var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
+    var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
+    var serviceTab = document.querySelector('div.services-control');
+    if (drawControl && editControl && serviceTab) {
+        serviceTab.appendChild(drawControl);
+        serviceTab.appendChild(editControl);
+        document.querySelectorAll('.button-container').forEach((btn) => {
+            let p = document.createElement("p");
+            let innerAnchor = btn.querySelector('a.leaflet-buttons-control-button');
+            p.innerText = innerAnchor.querySelector('div').title;
+            innerAnchor.after(p);
+        })
+    };
+
+    // delete old custom territory before new one    
+    document.querySelectorAll('.leaflet-pm-draw a').forEach(function (item) {
+        item.addEventListener('click', function () {
+            mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
+            if (window.currentSelectedSavedLayer)
+            {
+                window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
+            }
+            mapComponent.props.setSelectedInput(0);
+            mapComponent.props.setIsInfoBlockShown(0);
+        });
+    });
+
+    //Рассчет по выбранной территории
+    document.getElementById('layerBtn')?.addEventListener('click', () => { 
+        const mapLayers = Object.values(mapComponent.map._layers);
+        const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
+        const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
+
+        const infoType = hasHeatmapSports
+        ? infoTypes.sports
+        : hasHeatmapProvision
+            ? infoTypes.provision
+            : infoTypes.baseOrPopulation;
+        
+        if (infoType !== infoTypes.baseOrPopulation) {
+            mapComponent.props.setIsLoading(true);
+            
+            const shapeType = infoType === infoTypes.sports
+            ? 'info_sports'
+            : 'info_provision';
+        
+            const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0] || window.currentSelectedSavedLayer?.pm.getLayers()[0];
+            const shape = drawingLayer.pm.getShape() === 'Circle' 
+                ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
+                : drawingLayer;
+            const params = FilterModelToParams(mapComponent.props.model) + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,");
+            
+            mapAPI.getShapeInfo(shapeType, params)
+                .then(res => {
+                    const infoItems = res.data.features.map(item => item.properties);
+                    mapComponent.props.setData({
+                        type: infoType,
+                        items: infoItems 
+                    });
+
+                    localStorage.setItem('current_drawing_layer', JSON.stringify({
+                        model: mapComponent.props.model,
+                        filterParams: params,
+                        layer: shape.toGeoJSON(),
+                        infoType,
+                        infoItems
+                    }));
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+                .finally(() =>  mapComponent.props.setIsLoading(false));
+
+            const saveElms = document.querySelector('.saveLayer');
+            if (saveElms)
+            {
+                saveElms.style = 'display: inline-block';
+            }
+
+        }
+        else {
+            mapComponent.props.setData({
+                type: infoType,
+                items: [] 
+            });
+        }
+               
+    });
+
+    //Сохранение территории
+    document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
+        const nameElm = document.querySelector('.saveLayerName');
+        const name = nameElm.value
+        if (name)
+        {
+            nameElm.parentElement.parentElement.classList.remove('isFocused');
+            nameElm.value = '';
+            const saveElms = document.querySelector('.saveLayer');
+            if (saveElms)
+            {
+                saveElms.style = 'display: none';
+            }
+
+            let currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
+            let savingLayersObj = null;
+
+            if (localStorage.getItem(savedLayersName)) {
+                savingLayersObj = Array.from(JSON.parse(localStorage.getItem(savedLayersName)));
+                currentLayer = {
+                    ...currentLayer,
+                    id: savingLayersObj.length + 1,
+                    name
+                }
+                savingLayersObj.push(currentLayer);
+            } 
+            else {
+                currentLayer = {
+                    ...currentLayer,
+                    id: 1,
+                    name
+                }
+                savingLayersObj = new Array(currentLayer);
+            }
+            localStorage.setItem(savedLayersName, JSON.stringify(savingLayersObj));
+            mapComponent.props.setSavedLayers(savingLayersObj);
+        }
+        else {
+            nameElm.parentElement.parentElement.classList.add('isFocused');
+        }
+    });
+
+    //Отображение выбранной территории 
+    document.querySelector('.savedLayersBtns').addEventListener('click', (e) => {
+        if (e.target)
+        {
+            let elm = e.target.classList.contains('savedLayer')
+            ? e.target
+            : e.target.parentElement.classList.contains('savedLayer')
+                ? e.target.parentElement
+                : null;
+            if (!elm || elm.classList.contains('isActive'))
+            {
+                return;
+            }
+
+            if (localStorage.getItem(savedLayersName)) 
+            {
+                const savingLayers = Array.from(JSON.parse(localStorage.getItem(savedLayersName)));
+                const currentLayer = savingLayers.find(x => x.id === Number(elm.id));
+                if (currentLayer) {                            
+                    mapComponent.props.setIsLoading(true)
+                    // добавление маркеров на карту
+                    LoadMarkers(mapComponent.markers, currentLayer.filterParams);
+                    // добавление контрола переключения слоев
+                    Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
+                    .then(() => {
+                        const layerName = currentLayer.infoType === infoTypes.sports
+                            ? 'Тепловая карта спортивных зон'
+                            : 'Тепловая карта обеспеченности (потребности) спортивными зонами' ;
+                
+                        window.baseMaps[layerName].addTo(mapComponent.map)
+                        ReClassControl();
+                        
+                        mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
+                        if (window.currentSelectedSavedLayer)
+                        {
+                            window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
+                        }                        
+                        window.currentSelectedSavedLayer = L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
+
+                        mapComponent.map.setView(window.currentSelectedSavedLayer.getBounds().getCenter(), 
+                            mapComponent.map.getZoom(), 
+                            {
+                                "animate": true,
+                            });
+                        
+                        mapComponent.props.setModel({
+                            obj_name: currentLayer.model.obj_name,
+                            org_id: currentLayer.model.org_id,
+                            org_name: currentLayer.model.org_name,
+                            sz_name: currentLayer.model.sz_name,
+                            sz_type: currentLayer.model.sz_type,
+                            sz_type_name: currentLayer.model.sz_type_name,
+                            s_kind: currentLayer.model.s_kind,
+                            s_kind_name: currentLayer.model.s_kind_name,
+                            buf: currentLayer.model.buf
+                        });
+
+                        mapComponent.props.setData({
+                            type: currentLayer.infoType,
+                            items: currentLayer.infoItems 
+                        });
+                        mapComponent.props.setFlag(b => b + 1)
+                    })
+                    .finally(() => mapComponent.props.setIsLoading(false));
+                }
+            } 
+        }
+    });
+}
+
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
     RemoveOldLayers(mapElement);
-    const apiUrl = 'http://localhost:8090/geoserver/leaders/wms';
+    const apiUrl = `${geoServerUrl}/leaders/wms`;
     const getParamsAsString = (params) => {
         let paramsString = '';
         for (let i in params) {
@@ -243,7 +372,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5,
+        opacity: 0.6,
         viewparams: filterParams,
         env: getParamsAsString(params)
     });
@@ -256,22 +385,34 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5
+        opacity: 0.6
     });
 
-    // heatmap square init
-    var provParams = (await mapAPI.getMapObjects('thresholds_heatmap_provision', filterParams)).data.features[0].properties;
-    var heat_provision = L?.tileLayer.wms(apiUrl, {
-        layers: 'leaders:heatmap_provision',
-        styles: 'leaders:heatmap_provision_style',
+    // heatmap provision
+    // var provParams = (await mapAPI.getMapObjects('thresholds_heatmap_provision', filterParams)).data.features[0].properties;
+    // var heat_provision = L?.tileLayer.wms(apiUrl, {
+    //     layers: 'leaders:heatmap_provision',
+    //     styles: 'leaders:heatmap_provision_style',
+    //     format: 'image/png',
+    //     transparent: 'true',
+    //     tileSize: 512,
+    //     pane: 'heatPane',
+    //     detectRetina: true,
+    //     opacity: 0.6,
+    //     viewparams: filterParams,
+    //     env: getParamsAsString(provParams)
+    // });
+
+    var heat_need = L?.tileLayer.wms(apiUrl, {
+        layers: 'leaders:heatmap_need',
+        styles: 'leaders:heatmap_need_style',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5,
+        opacity: 0.6,
         viewparams: filterParams,
-        env: getParamsAsString(provParams)
     });
 
     var buffers = L?.tileLayer.wms(apiUrl, {
@@ -287,11 +428,12 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     var emptyLayer = L.tileLayer('', {pane: 'heatPane'}).addTo(mapElement);
 
-    var baseMaps = {
+    var baseMaps = window.baseMaps = {
         'Базовая карта': emptyLayer,
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
-        'Тепловая карта обеспеченности спортивными зонами': heat_provision
+        // 'Тепловая карта обеспеченности спортивными зонами': heat_provision,
+        'Тепловая карта обеспеченности (потребности) спортивными зонами':heat_need
     };
 
     var overlayMaps = {
@@ -301,7 +443,36 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     var stylesControl = L.control.layers(baseMaps, overlayMaps, {position: 'topright', collapsed: false});
 
-    var layers_legends = [
+    // loader on layer load    
+    if (document.getElementsByClassName("Loader-layer").length === 0) {
+        var load = document.createElement('div');
+        load.classList.add('Loader-layer');
+        load.innerHTML = `
+            <div class='Loader-layer-wrapper'>
+                <div class='Loader-layer__inner'}>
+                    Прогрузка слоя...
+                    <img src=${loader} alt=''/>
+                </div>
+            </div>`
+        load.style='display:none'
+        document.getElementsByClassName('map')[0].appendChild(load); 
+    }
+
+    Object.keys(baseMaps).forEach(key => {
+        if (key !=='Базовая карта') {
+            baseMaps[key].on("loading",function() {
+                load = document.getElementsByClassName("Loader-layer")[0]
+                load.style='display:block'
+            });
+            baseMaps[key].on("load",function() {
+                load = document.getElementsByClassName("Loader-layer")[0]
+                load.style='display:none'
+            });
+        }
+    })
+    
+
+    const layers_legends = [
         {
             name: 'heatmap_square',
             style: 'heat_square_style',
@@ -312,17 +483,22 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             style: 'heat_population',
             legend_name: 'Средняя численность населения',
         },
+        // {
+        //     name: 'heatmap_provision',
+        //     style: 'heatmap_provision_style',
+        //     legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
+        // },
         {
-            name: 'heatmap_provision',
-            style: 'heatmap_provision_style',
-            legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
+            name: 'heatmap_need',
+            style: 'heatmap_need_style',
+            legend_name: 'Обеспеченность или потребность населения в спортивной инфраструктуре',
         }
     ]
 
     // legend
     var legend = L.control({style: 'background:white'});
     legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info-legend')
+        var div = L.DomUtil.create('div', 'info-legend hint-is-shown')
         div.style = 'display: none'
         div.innerHTML +=
             '<strong style="margin-bottom: -20px; display: block;"> Условные обозначения </strong><br>'
@@ -339,7 +515,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             content += `<i>${layer_legend_descr}</i><br>`
         }
 
-        content += `<img class="img-legend" src="http://localhost:8090/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
+        content += `<img class="img-legend" src="${geoServerUrl}/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
         div.innerHTML += content
         return div;
     };
@@ -368,15 +544,30 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
                 if (layer.options.pane === 'heatPane' && layer._url === '') {
                     document.querySelector('.info-legend').style = 'display: none'
                 } else if (layer.options.pane === 'heatPane' && layer._url !== '') {
+                    const imgElem = document.getElementsByClassName('img-legend')[0]
                     document.querySelector('.info-legend').style = 'display: block'
+                    imgElem.style.width='0'
                     const layer_name = layer.options.layers.split(':')[1]
                     const style = layer.options.styles.split(':')[1]
                     const legend_params = layers_legends.find(item => item.name === layer_name)
                     document.querySelector('.info-legend > div > b').innerHTML = legend_params.legend_name;
                     // $('.info-legend').children('div').children('i').text(legend_params.);
 
-                    var src = `http://localhost:8090/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
+                    var src = `${geoServerUrl}/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
                     document.querySelector('.info-legend > div > img').setAttribute("src", src);
+
+                    imgElem.onload = function(e){
+                        if (layer_name==='heatmap_need') {
+                            imgElem.style.width = '200px'
+                        }
+                        else if (layer_name==='grid_hex_wgs_population') {
+                            imgElem.style.width = '150px'
+                        }
+                        else {
+                            imgElem.style.width = '240px'
+                        }
+                    }
+                    
                 }
 
             } else if (!input.checked) {
@@ -414,25 +605,27 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         var baseLayers = layerControl.querySelector('.leaflet-control-layers-base');
         var overlaysLayers = layerControl.querySelector('.leaflet-control-layers-overlays');
 
-        const radioLabel = layerControl.querySelectorAll('.leaflet-control-layers-base label');
-        const radioSpan = layerControl.querySelectorAll('.leaflet-control-layers-base span');
-
-        radioLabel.forEach(el => el.classList.add('form-radio-custom'))
-        radioSpan.forEach(el => el.classList.add('checkmark'))
-
-        const label = layerControl.querySelectorAll('.leaflet-control-layers-overlays label');
-        const span = layerControl.querySelectorAll('.leaflet-control-layers-overlays span');
-
-        label.forEach(el => el.classList.add('form-checkbox-custom'))
-        span.forEach(el => el.classList.add('form-label', 'form-label--lib'))
-
         if (baseLayers && overlaysLayers) {
+            ReClassControl();
             layerControl.insertBefore(overlaysLayers, layerControl.firstChild);
             layerControl.appendChild(baseLayers);
         }
-    }
-    ;
+    };
 };
+
+const ReClassControl = () => {   
+    const radioLabel = document.querySelectorAll('.leaflet-control-layers-base label');
+    const radioSpan = document.querySelectorAll('.leaflet-control-layers-base span');
+
+    radioLabel.forEach(el => el.classList.add('form-radio-custom'))
+    radioSpan.forEach(el => el.classList.add('checkmark'))
+
+    const label = document.querySelectorAll('.leaflet-control-layers-overlays label');
+    const span = document.querySelectorAll('.leaflet-control-layers-overlays span');
+
+    label.forEach(el => el.classList.add('form-checkbox-custom'))
+    span.forEach(el => el.classList.add('form-label', 'form-label--lib'))
+}
 
 export const LoadMarkers = (markersGroup, params) => {
     mapAPI.getMapObjects('filter_apply_objects', params).then(res => {
@@ -440,7 +633,7 @@ export const LoadMarkers = (markersGroup, params) => {
         for (var i = 0; i < res.data.features.length; i++) {
             var a = res.data.features[i];
             var id = a.properties.id;
-            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
+            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon, pmIgnore: true})
                 .addTo(markersGroup);
         }
     })
@@ -463,7 +656,8 @@ export const RemoveOldLayers = (mapElement) => {
     const layers = [
         'leaders:heatmap_square_style', 
         'leaders:heat_population', 
-        'leaders:heatmap_provision_style', 
+        'leaders:heatmap_provision_style',
+        'leaders:heatmap_need_style',
         'leaders:buffers'];
 
     layers.forEach((layer) => {
@@ -471,6 +665,33 @@ export const RemoveOldLayers = (mapElement) => {
         .filter(x => x.options.styles === layer)
         .forEach(y => y.remove(mapElement))
     })
+}
+
+export const FilterModelToParams = (filterModel) =>
+{
+    var params = '';
+    if (filterModel) {
+        if (filterModel.obj_name?.length > 0) {
+            params += 'obj_name:' + filterModel.obj_name.join('\\;') + ';';
+        }
+        if (filterModel.org_id?.length > 0) {
+            params += 'org_id:' + filterModel.org_id.join('\\;') + ';';
+        }
+        if (filterModel.sz_name?.length > 0) {
+            params += 'sz_name:' + filterModel.sz_name.join('\\;') + ';';
+        }
+        if (filterModel.sz_type?.length > 0) {
+            params += 'sz_type:' + filterModel.sz_type.join('\\;') + ';';
+        }
+        if (filterModel.s_kind?.length > 0) {
+            params += 's_kind:' + filterModel.s_kind.join('\\;') + ';';
+        }
+        if (filterModel.buf?.length > 0) {
+            params += 'buf:' + filterModel.buf.join('\\;') + ';';
+        }
+    }
+    
+    return params;
 }
 
 export default Livemap
