@@ -84,11 +84,14 @@
 	from stat_aggr s, geo.unoms_arrays_hexagons h&#xd;
 	where s.unom=h.unom&#xd;
 )&#xd;
+, hex_group as (&#xd;
+	select s.hex_id, avg(square_provision) square_provision&#xd;
+	from stats_to_hex s	&#xd;
+	group by s.hex_id&#xd;
+)&#xd;
 , heat as (&#xd;
-	select s.hex_id, g.geom, avg(square_provision) square_provision&#xd;
-	from geo.grid_hex_wgs g, stats_to_hex s&#xd;
-	where g.id = s.hex_id&#xd;
-	group by s.hex_id, g.geom&#xd;
+	select h.hex_id, g.geom, h.square_provision from hex_group h, geo.grid_hex_wgs g&#xd;
+	where g.id = h.hex_id&#xd;
 )&#xd;
 SELECT 0.9 class_empty,&#xd;
 	PERCENTILE_CONT(0.2) WITHIN GROUP(ORDER BY square_provision) class_1, &#xd;

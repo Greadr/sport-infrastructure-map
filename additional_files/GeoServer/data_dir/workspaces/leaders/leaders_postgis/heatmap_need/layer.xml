@@ -1,0 +1,17 @@
+<layer>
+  <name>heatmap_need</name>
+  <id>LayerInfoImpl--3bff0868:17ce246cc46:4050</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--570ae188:124761b8d78:-7fe0</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--3bff0868:17ce246cc46:404f</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2021-11-02 20:57:24.666 UTC</dateCreated>
+  <dateModified>2021-11-05 09:00:00.494 UTC</dateModified>
+</layer>

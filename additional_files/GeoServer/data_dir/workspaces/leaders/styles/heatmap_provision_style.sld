@@ -3,7 +3,7 @@
   <NamedLayer>
     <se:Name>heatmap_provision</se:Name>
     <UserStyle>
-      <se:Name>Обеспечнность спортивными зонами</se:Name>
+      <se:Name>Обеспеченность спортивными зонами</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>empty</se:Name>

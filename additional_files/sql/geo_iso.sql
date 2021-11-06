@@ -288,17 +288,25 @@ join house_join h
 on h.id=z.object_id
 group by z.id
 
+CREATE EXTENSION btree_gin;
+
+
+CREATE INDEX zones_arrays_unoms_idx ON geo.zones_arrays_unoms using gin(id, unoms)
+
+
 -- Присвоение unom-ам домов id гексагона, на которые интерполируются данные
 with house_join as (
 	select b.unom, g.id hex_id
 	from geo.living_unoms_buffer_100 b
-	left join geo.grid_hex_wgs g on st_intersects(b.geom, g.geom)
+	left join geo.grid_hex_wgs_centroid g on st_intersects(b.geom, g.geom)
 )
 select u.unom, array_agg(hex_id) hex_ids
 into geo.unoms_arrays_hexagons
 from house_join u
 group by u.unom
 
+CREATE INDEX unoms_arrays_hexagons_idx ON geo.unoms_arrays_hexagons(unom)
+ 
 
 -- SQLVIEW THRESHOLDS FOR HEATMAP PROVISION
 with zones as (
@@ -503,21 +511,29 @@ with zones as (
 	join "source".sport_zones sz on sz.id = zf.id 
 	join "source".zone_types zt on zt.id = sz.zone_type 
 )
-, sport_kinds as (
-	select zf.id,  count (distinct sk."name") sport_kinds_count
+, sport_kinds_all as (
+	select zf.id,  sk."name"
 	from zones_filter zf
 	join "source".sport_zones sz on sz.id = zf.id 
 	join "source".sport_zones_to_kinds zk on zk.sport_zone_id = sz.id 
 	join "source".sport_kinds sk on zk.sport_kind_id = sk.id
-	where NULLIF('', '') is null or
-		zk.sport_kind_id = any(string_to_array('', ';')::int[])
-	group by zf.id
+	where NULLIF('%s_kind%', '') is null or
+		zk.sport_kind_id = any(string_to_array('%s_kind%', ';')::int[])
+)
+, sport_kinds as (
+	select id,  count ("name") sport_kinds_count
+	from sport_kinds_all
+	group by id
+)
+, sport_kinds_territory as (
+	select count(distinct name) sport_kinds_sum
+	from sport_kinds_all
 )
 , aggr_by_unom as (
 	select zt.unom, 
 	count(zt.id)/avg(popul)*100000 sport_zones_provision, 
 	array_agg(zone_type) zone_types, 
-	sum(zt.square)/avg(popul)*100000sport_square_provision, 
+	sum(zt.square)/avg(popul)*100000 sport_square_provision, 
 	avg(sk.sport_kinds_count)/avg(popul)*100000 sport_kinds_provision, 
 	avg(popul) population,
 	avg(zt.square) square_sum
@@ -536,7 +552,7 @@ with zones as (
 	order by count(zone_type) desc
 )
 , zone_types_names as (
-	select json_agg(distinct zone_type) sport_zones_types, sum (sport_square_sum) sport_square_sum
+	select json_agg(distinct zone_type) sport_zones_types, sum(type_count) sport_zones_sum,  sum (sport_square_sum) sport_square_sum
 	from agg_by_type
 )
 , all_aggregate as (
@@ -546,13 +562,17 @@ with zones as (
 	sum (population) population
 	from aggr_by_unom, zone_types_names
 )
-select sport_zones_provision, 
-	sport_square_provision, 
-	sport_kinds_provision,
+select 
 	population,
+	sport_zones_sum,
+	sport_zones_provision, 
 	sport_square_sum,
+	sport_square_provision, 
+	sport_kinds_sum,
+	sport_kinds_provision,
 	sport_zones_types::text
-	from all_aggregate, zone_types_names
+	from all_aggregate, zone_types_names, sport_kinds_territory
+
 	
 	
 -- SQLVIEW sport stats by custom territory

@@ -30,7 +30,7 @@
     <entry key="JDBC_VIRTUAL_TABLE">
       <virtualTable>
         <name>filter_name_zone</name>
-        <sql>select distinct name, zone_type&#xd;
+        <sql>select distinct on (name) name, zone_type, id&#xd;
 from source.sport_zones&#xd;
 where name ilike &apos;%%name%%&apos;&#xd;
 order by name&#xd;

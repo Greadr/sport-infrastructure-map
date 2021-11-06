@@ -13,7 +13,7 @@
     <charset>UTF-8</charset>
     <numDecimals>8</numDecimals>
     <onlineResource>http://geoserver.org</onlineResource>
-    <proxyBaseUrl>https://geoserver.bigdatamap.keenetic.pro/geoserver/</proxyBaseUrl>
+    <proxyBaseUrl>https://geoserver.sports.keenetic.pro/geoserver/</proxyBaseUrl>
     <verbose>false</verbose>
     <verboseExceptions>false</verboseExceptions>
     <metadata>
@@ -74,7 +74,7 @@
     <queueType>UNBOUNDED</queueType>
     <imageIOCacheThreshold>10240</imageIOCacheThreshold>
   </coverageAccess>
-  <updateSequence>745</updateSequence>
+  <updateSequence>860</updateSequence>
   <featureTypeCacheSize>0</featureTypeCacheSize>
   <globalServices>true</globalServices>
   <useHeadersProxyURL>false</useHeadersProxyURL>

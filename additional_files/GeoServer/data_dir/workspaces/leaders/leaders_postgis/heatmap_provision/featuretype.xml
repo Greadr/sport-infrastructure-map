@@ -51,8 +51,8 @@
 		)&#xd;
 		and&#xd;
 		(&#xd;
-			NULLIF(&apos;%org_name%&apos;, &apos;&apos;) is null or&#xd;
-			so.org_id = any(string_to_array(&apos;%org_name%&apos;, &apos;;&apos;)::int[])&#xd;
+			NULLIF(&apos;%org_id%&apos;, &apos;&apos;) is null or&#xd;
+			so.org_id = any(string_to_array(&apos;%org_id%&apos;, &apos;;&apos;)::int[])&#xd;
 		)&#xd;
 		and&#xd;
 		(&#xd;
@@ -94,10 +94,14 @@
 	from stat_aggr s, geo.unoms_arrays_hexagons h&#xd;
 	where s.unom=h.unom&#xd;
 )&#xd;
-select s.hex_id, g.geom, avg(square_provision) square_provision&#xd;
-from geo.grid_hex_wgs g, stats_to_hex s&#xd;
-where g.id = s.hex_id&#xd;
-group by s.hex_id, g.geom
+, hex_group as (&#xd;
+select s.hex_id, avg(square_provision) square_provision&#xd;
+from stats_to_hex s&#xd;
+group by s.hex_id&#xd;
+) &#xd;
+select h.hex_id, g.geom, square_provision&#xd;
+from geo.grid_hex_wgs g, hex_group h&#xd;
+where g.id = h.hex_id
 </sql>
         <escapeSql>false</escapeSql>
         <geometry>
@@ -114,15 +118,15 @@ group by s.hex_id, g.geom
           <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
         </parameter>
         <parameter>
+          <name>org_id</name>
+          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
+        </parameter>
+        <parameter>
           <name>sz_name</name>
           <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
         </parameter>
         <parameter>
           <name>s_kind</name>
-          <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
-        </parameter>
-        <parameter>
-          <name>org_name</name>
           <regexpValidator>^[-а-яА-ЯёЁ\s\d;№,«».]+$</regexpValidator>
         </parameter>
         <parameter>

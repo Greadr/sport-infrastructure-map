@@ -6,127 +6,32 @@
       <se:Name>Суммарная площадь спортивных зон</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
-          <se:Name>empty</se:Name>
+          <se:Name>max</se:Name>
           <se:Description>
-            <se:Title>Инфраструктура отсутствует</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:And>
-              <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Literal>0</ogc:Literal>
-              </ogc:PropertyIsGreaterThanOrEqualTo>
-              <ogc:PropertyIsLessThanOrEqualTo>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Function name="env">
-                   <ogc:Literal>class_empty</ogc:Literal>
-                   <ogc:Literal>0.9</ogc:Literal>
-                </ogc:Function>
-              </ogc:PropertyIsLessThanOrEqualTo>
-            </ogc:And>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#ededed</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#A1A1A1</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>insignificant</se:Name>
-          <se:Description>
-            <se:Title>Незначительная</se:Title>
+            <se:Title>Максимальная</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:And>
               <ogc:PropertyIsGreaterThan>
                 <ogc:PropertyName>sum_square</ogc:PropertyName>
                 <ogc:Function name="env">
-                   <ogc:Literal>class_empty</ogc:Literal>
+                   <ogc:Literal>class_4</ogc:Literal>
                 </ogc:Function>
               </ogc:PropertyIsGreaterThan>
               <ogc:PropertyIsLessThanOrEqualTo>
                 <ogc:PropertyName>sum_square</ogc:PropertyName>
                 <ogc:Function name="env">
-                   <ogc:Literal>class_1</ogc:Literal>
+                   <ogc:Literal>class_5</ogc:Literal>
                 </ogc:Function>
               </ogc:PropertyIsLessThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>
           <se:PolygonSymbolizer>
             <se:Fill>
-              <se:SvgParameter name="fill">#d74042</se:SvgParameter>
+              <se:SvgParameter name="fill">#37a859</se:SvgParameter>
             </se:Fill>
             <se:Stroke>
-              <se:SvgParameter name="stroke">#d74042</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>small</se:Name>
-          <se:Description>
-            <se:Title>Малая</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:And>
-              <ogc:PropertyIsGreaterThan>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Function name="env">
-                   <ogc:Literal>class_1</ogc:Literal>
-                </ogc:Function>
-              </ogc:PropertyIsGreaterThan>
-              <ogc:PropertyIsLessThanOrEqualTo>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Function name="env">
-                   <ogc:Literal>class_2</ogc:Literal>
-                </ogc:Function>
-              </ogc:PropertyIsLessThanOrEqualTo>
-            </ogc:And>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#fdae61</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#fdae61</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Name>avg</se:Name>
-          <se:Description>
-            <se:Title>Средняя</se:Title>
-          </se:Description>
-          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-            <ogc:And>
-              <ogc:PropertyIsGreaterThan>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Function name="env">
-                   <ogc:Literal>class_2</ogc:Literal>
-                </ogc:Function>
-              </ogc:PropertyIsGreaterThan>
-              <ogc:PropertyIsLessThanOrEqualTo>
-                <ogc:PropertyName>sum_square</ogc:PropertyName>
-                <ogc:Function name="env">
-                   <ogc:Literal>class_3</ogc:Literal>
-                </ogc:Function>
-              </ogc:PropertyIsLessThanOrEqualTo>
-            </ogc:And>
-          </ogc:Filter>
-          <se:PolygonSymbolizer>
-            <se:Fill>
-              <se:SvgParameter name="fill">#ffffc0</se:SvgParameter>
-            </se:Fill>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#ffffc0</se:SvgParameter>
+              <se:SvgParameter name="stroke">#37a859</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
               <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
             </se:Stroke>
@@ -165,32 +70,127 @@
           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
-          <se:Name>max</se:Name>
+          <se:Name>avg</se:Name>
           <se:Description>
-            <se:Title>Максимальная</se:Title>
+            <se:Title>Средняя</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
             <ogc:And>
               <ogc:PropertyIsGreaterThan>
                 <ogc:PropertyName>sum_square</ogc:PropertyName>
                 <ogc:Function name="env">
-                   <ogc:Literal>class_4</ogc:Literal>
+                   <ogc:Literal>class_2</ogc:Literal>
                 </ogc:Function>
               </ogc:PropertyIsGreaterThan>
               <ogc:PropertyIsLessThanOrEqualTo>
                 <ogc:PropertyName>sum_square</ogc:PropertyName>
                 <ogc:Function name="env">
-                   <ogc:Literal>class_5</ogc:Literal>
+                   <ogc:Literal>class_3</ogc:Literal>
                 </ogc:Function>
               </ogc:PropertyIsLessThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>
           <se:PolygonSymbolizer>
             <se:Fill>
-              <se:SvgParameter name="fill">#37a859</se:SvgParameter>
+              <se:SvgParameter name="fill">#ffffc0</se:SvgParameter>
             </se:Fill>
             <se:Stroke>
-              <se:SvgParameter name="stroke">#37a859</se:SvgParameter>
+              <se:SvgParameter name="stroke">#ffffc0</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
+      	<se:Rule>
+          <se:Name>small</se:Name>
+          <se:Description>
+            <se:Title>Малая</se:Title>
+          </se:Description>
+          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:And>
+              <ogc:PropertyIsGreaterThan>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Function name="env">
+                   <ogc:Literal>class_1</ogc:Literal>
+                </ogc:Function>
+              </ogc:PropertyIsGreaterThan>
+              <ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Function name="env">
+                   <ogc:Literal>class_2</ogc:Literal>
+                </ogc:Function>
+              </ogc:PropertyIsLessThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#fdae61</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#fdae61</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
+        <se:Rule>
+          <se:Name>insignificant</se:Name>
+          <se:Description>
+            <se:Title>Незначительная</se:Title>
+          </se:Description>
+          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:And>
+              <ogc:PropertyIsGreaterThan>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Function name="env">
+                   <ogc:Literal>class_empty</ogc:Literal>
+                </ogc:Function>
+              </ogc:PropertyIsGreaterThan>
+              <ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Function name="env">
+                   <ogc:Literal>class_1</ogc:Literal>
+                </ogc:Function>
+              </ogc:PropertyIsLessThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#d74042</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#d74042</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+              <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
+            </se:Stroke>
+          </se:PolygonSymbolizer>
+        </se:Rule>
+        <se:Rule>
+          <se:Name>empty</se:Name>
+          <se:Description>
+            <se:Title>Инфраструктура отсутствует</se:Title>
+          </se:Description>
+          <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+            <ogc:And>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Literal>0</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyIsLessThanOrEqualTo>
+                <ogc:PropertyName>sum_square</ogc:PropertyName>
+                <ogc:Function name="env">
+                   <ogc:Literal>class_empty</ogc:Literal>
+                   <ogc:Literal>0.9</ogc:Literal>
+                </ogc:Function>
+              </ogc:PropertyIsLessThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>
+          <se:PolygonSymbolizer>
+            <se:Fill>
+              <se:SvgParameter name="fill">#ededed</se:SvgParameter>
+            </se:Fill>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#A1A1A1</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
               <se:SvgParameter name="stroke-linejoin">bevel</se:SvgParameter>
             </se:Stroke>
